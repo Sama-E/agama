@@ -7,7 +7,7 @@ import { CampaignDetails, CreateCampaign, Home, Profile } from './pages';
 
 const App = () => {
   return (
-    <div className="relative sm:-8 p-4 bg-[#dedefd] min-h-screen flex flew-row">
+    <div className="relative sm:-8 p-4 bg-[#13131a] min-h-screen flex flew-row">
       
       <div className="sm:flex hidden mr-10 realtive">
         <SideBar />
