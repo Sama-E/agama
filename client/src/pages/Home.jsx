@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useStateContext } from '../contextAPI';
+import { DisplayCampaigns } from '../components';
+
 
 
 const Home = () => {
@@ -25,7 +27,11 @@ const Home = () => {
   }, [address, contract]);
 
   return (
-    <div>Home</div>
+    <DisplayCampaigns
+      title="All Campaigns"
+      isLoading={isLoading}
+      campaigns={campaigns}
+    />
   )
 }
 

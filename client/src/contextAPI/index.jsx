@@ -39,7 +39,7 @@ export const StateContextProvider = ({children}) => {
   //Get all campaigns
   const getCampaigns = async () => {
     const campaigns = await contract.call('getCampaigns');
-    console.log(campaigns)
+    console.log(campaigns.length)
     //Parse/Map campaigns array of arrays
     //Return one parsed campaign object
     //Turn BigNumbers(target, deadline, amountCollected) to human readable format
@@ -54,8 +54,8 @@ export const StateContextProvider = ({children}) => {
       pId: i
     }));
 
-    console.log(parsedCampaigns);
-  }
+      return parsedCampaigns;
+    }
 
   return (
     <StateContext.Provider
