@@ -11,7 +11,7 @@ export const StateContextProvider = ({children}) => {
   //Connect with smart contract
   const { contract } = useContract('0x08B53921Cb3B3BF3F1720C22eA2DDb17b5573029', "token");
 
-  const { mutateAsync: createCampaign } = useContractWrite(contract, "createCampaign")
+  const { mutateAsync: createCampaign } = useContractWrite(contract, "createCampaign");
 
   //Wallet Address
   const address = useAddress();
@@ -39,7 +39,6 @@ export const StateContextProvider = ({children}) => {
   //Get all campaigns
   const getCampaigns = async () => {
     const campaigns = await contract.call('getCampaigns');
-    console.log(campaigns.length)
     //Parse/Map campaigns array of arrays
     //Return one parsed campaign object
     //Turn BigNumbers(target, deadline, amountCollected) to human readable format
@@ -57,6 +56,40 @@ export const StateContextProvider = ({children}) => {
       return parsedCampaigns;
     }
 
+    //For Profile - Individual Profile Campaigns
+    const getUserCampaigns = async () => {
+      const allCampaigns = await getCampaigns();
+
+      const filteredCampaigns = allCampaigns.filter((campaign) =>
+        campaign.owner === address);
+
+        return filteredCampaigns;
+    }
+
+    //Donate 
+    const donate = async (pId, amount) => {
+      const data = await contract.call('donateToCampaign', [pId], { value: ethers.utils.parseEther(amount) });
+  
+      return data;
+    }
+
+    //Donations
+    const getDonations = async (pId) => {
+      const donations = await contract.call('getDonators', [pId]);
+      const numberOfDonations = donations[0].length;
+  
+      const parsedDonations = [];
+  
+      for(let i = 0; i < numberOfDonations; i++) {
+        parsedDonations.push({
+          donator: donations[0][i],
+          donation: ethers.utils.formatEther(donations[1][i].toString())
+        })
+      }
+  
+      return parsedDonations;
+    }
+
   return (
     <StateContext.Provider
       value={{
@@ -65,6 +98,9 @@ export const StateContextProvider = ({children}) => {
         connect,
         createCampaign : publishCampaign,
         getCampaigns,
+        getUserCampaigns,
+        donate,
+        getDonations,
       }}
     >
       {children}

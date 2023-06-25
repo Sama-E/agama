@@ -9,7 +9,7 @@ const App = () => {
   return (
     <div className="relative sm:-8 p-4 bg-[#13131a] min-h-screen flex flew-row">
       
-      <div className="sm:flex hidden mr-10 realtive">
+      <div className="sm:flex hidden mr-10 relative">
         <SideBar />
       </div> 
       
@@ -19,7 +19,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/create-campaign" element={<CreateCampaign />} />
-        <Route path="/campaign-details" element={<CampaignDetails />} />
+        <Route path="/campaign-details/:id" element={<CampaignDetails />} />
       </Routes>
       </div>
 
