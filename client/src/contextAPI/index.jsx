@@ -1,7 +1,7 @@
 import React, { useContext, createContext } from 'react';
 
 import { useAddress, useContract, useMetamask, useContractWrite } from '@thirdweb-dev/react';
-// import { ethers } from 'ethers';
+import { ethers } from 'ethers';
 
 
 const StateContext = createContext();
@@ -18,7 +18,7 @@ export const StateContextProvider = ({children}) => {
   //Connect to Metamask
   const connect = useMetamask();
 
-  //Publish Campaign with Smart Contract on Block
+  //Publish New Campaign with Smart Contract on Block
   const publishCampaign = async (form) => {
     try {
       const data = await createCampaign({args:[
@@ -36,6 +36,27 @@ export const StateContextProvider = ({children}) => {
     }
   }
 
+  //Get all campaigns
+  const getCampaigns = async () => {
+    const campaigns = await contract.call('getCampaigns');
+    console.log(campaigns)
+    //Parse/Map campaigns array of arrays
+    //Return one parsed campaign object
+    //Turn BigNumbers(target, deadline, amountCollected) to human readable format
+    const parsedCampaigns = campaigns.map((campaign, i) => ({
+      owner: campaign.owner,
+      title: campaign.title,
+      description: campaign.description,
+      target: ethers.utils.formatEther(campaign.target.toString()),
+      deadline: campaign.deadline.toNumber(),
+      amountCollected: ethers.utils.formatEther(campaign.amountCollected.toString()),
+      image: campaign.image,
+      pId: i
+    }));
+
+    console.log(parsedCampaigns);
+  }
+
   return (
     <StateContext.Provider
       value={{
@@ -43,6 +64,7 @@ export const StateContextProvider = ({children}) => {
         contract,
         connect,
         createCampaign : publishCampaign,
+        getCampaigns,
       }}
     >
       {children}
